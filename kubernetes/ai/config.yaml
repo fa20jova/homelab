@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ollama-config
+  namespace: ai
+data:
+  ollama_url: "http://172.20.50.61:11434"
+  ollama_model_r1: "deepseek-r1:7b"
+  ollama_model_coder: "deepseek-coder:6.7b-instruct-q5_K_M"

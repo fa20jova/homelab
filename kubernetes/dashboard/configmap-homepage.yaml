@@ -1,0 +1,178 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage
+  namespace: dash
+  labels:
+    app.kubernetes.io/name: homepage
+data:
+  kubernetes.yaml: |
+    mode: cluster
+    ingress: false
+    traefik: false
+
+  settings.yaml: |
+    title: Welcome Back!
+
+    background:
+      image: https://images.unsplash.com/photo-1502790671504-542ad42d5189auto=format&fit=crop&w=3840&q=95
+      blur: md
+      saturate: 85
+      brightness: 85
+      opacity: 18
+
+    providers:
+      longhorn:
+        url: http://longhorn.box
+
+    layout:
+      - Media:
+          style: row
+          columns: 3
+      - Home:
+          style: row
+          columns: 3
+      - Infra:
+          style: row
+          columns: 3
+
+    widgets:
+      - kubernetes:
+          cluster: { show: false }
+          nodes:   { show: true, cpu: true, memory: true, showLabel: true }
+
+      - search:
+          provider: duckduckgo
+          target: _blank
+          focus: true
+
+      - resources:
+          id: net-right
+          backend: resources
+          cpu: false
+          memory: false
+          disk: false
+          uptime: false
+          network: default
+
+  custom.css: |
+    :root {
+      --card-radius: 16px;
+      --card-shadow: 0 10px 35px rgba(0, 0, 0, 0.22);
+      --card-shadow-hover: 0 18px 55px rgba(0, 0, 0, 0.28);
+      --surface: rgba(255, 255, 255, 0.72);
+      --surface-strong: rgba(255, 255, 255, 0.82);
+      --border: rgba(0, 0, 0, 0.08);
+    }
+
+    header {
+      background: transparent !important;
+      backdrop-filter: blur(6px);
+    }
+
+    main .card,
+    main .group,
+    main .widget {
+      border-radius: var(--card-radius) !important;
+      background: var(--surface) !important;
+      backdrop-filter: blur(8px) saturate(120%);
+      border: 1px solid var(--border) !important;
+      box-shadow: var(--card-shadow);
+      transition: transform 160ms ease, box-shadow 180ms ease, background 160ms ease;
+    }
+
+    main .group {
+      background: var(--surface-strong) !important;
+    }
+
+    @media (min-width: 1200px) {
+      header .info,
+      header .widgets,
+      header .grid {
+        gap: 12px !important;
+      }
+    }
+
+    #net-right,
+    [data-id="net-right"] {
+      margin-left: auto !important;
+      order: 999 !important;
+    }
+
+    main a[href*="http"] .card:hover,
+    main .card:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: var(--card-shadow-hover);
+    }
+
+    main .card:hover img,
+    main .card:hover svg {
+      filter: saturate(115%) contrast(105%);
+    }
+
+    main h2,
+    .group h2,
+    .group .title {
+      font-weight: 600;
+      letter-spacing: .2px;
+      opacity: .9;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(1300px 600px at 10% -10%, rgba(255,255,255,.10), transparent 55%),
+        linear-gradient(to bottom, rgba(0,0,0,.18), rgba(0,0,0,.06) 40%, transparent);
+      pointer-events: none;
+    }
+
+    .group .service .card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .group .service .card:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 18px 55px rgba(0,0,0,.28);
+    }
+
+    .group .service .card::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 18px;
+      background:
+        radial-gradient(1200px 240px at 0% -10%, rgba(255,255,255,.08), transparent 40%),
+        linear-gradient(120deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+      opacity: .55;
+      pointer-events: none;
+    }
+
+    .card .stats,
+    .card .stat {
+      gap: 8px;
+    }
+
+  custom.js: ""
+
+  widgets.yaml: |
+    - kubernetes:
+        cluster: { show: false }
+        nodes:   { show: true, cpu: true, memory: true, showLabel: true }
+
+    - search:
+        provider: duckduckgo
+        target: _blank
+        focus: true
+
+    - resources:
+        id: net-right
+        backend: resources
+        cpu: false
+        memory: false
+        disk: false
+        uptime: false
+        network: default

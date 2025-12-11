@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-services
+  namespace: dash
+  labels:
+    app.kubernetes.io/name: homepage
+data:
+  services.yaml: |
+    - Home:
+        - Pi-hole:
+            icon: pi-hole.png
+            href: http://pihole.box/admin
+            siteMonitor: http://pihole.box/
+            widget:
+              type: pihole
+              url: http://pihole.box
+              version: 6
+              key: "{{HOMEPAGE_VAR_PIHOLE_API}}"
+
+        - Home Assistant:
+            icon: home-assistant.png
+            href: http://ha.box
+            siteMonitor: http://ha.box/
+            namespace: home
+            app: home-assistant
+
+    - Infra:
+        - Longhorn:
+            icon: longhorn.png
+            href: http://longhorn.box
+            siteMonitor: http://longhorn.box/
+            namespace: longhorn-system
+            app: longhorn-frontend
+
+        - Traefik:
+            icon: traefik.png
+            href: http://172.20.50.55
+            siteMonitor: http://172.20.50.55/
+
+    - Media:
+        - Jellyfin:
+            icon: jellyfin.png
+            href: http://jelly.box
+            siteMonitor: http://jelly.box/
+            namespace: media
+            app: jellyfin
+            widget:
+              type: jellyfin
+              url: http://jelly.box
+              key: "{{HOMEPAGE_VAR_JELLYFIN_API}}"
+
+        - qBittorrent:
+            icon: qbittorrent.png
+            href: http://qbit.box
+            siteMonitor: http://qbit.box/
+            namespace: media
+            app: qbittorrent
+            widget:
+              type: qbittorrent
+              url: http://qbit.box
+              username: "{{HOMEPAGE_VAR_QB_USER}}"
+              password: "{{HOMEPAGE_VAR_QB_PASS}}"
+
+        - Radarr:
+            icon: radarr.png
+            href: http://radarr.box
+            siteMonitor: http://radarr.box/
+            namespace: media
+            app: radarr
+            widget:
+              type: radarr
+              url: http://radarr.box
+              key: "{{HOMEPAGE_VAR_RADARR_API}}"
+
+        - Sonarr:
+            icon: sonarr.png
+            href: http://sonarr.box
+            siteMonitor: http://sonarr.box/
+            namespace: media
+            app: sonarr
+            widget:
+              type: sonarr
+              url: http://sonarr.box
+              key: "{{HOMEPAGE_VAR_SONARR_API}}"
+
+        - Prowlarr:
+            icon: prowlarr.png
+            href: http://index.box
+            siteMonitor: http://index.box/
+            namespace: media
+            app: prowlarr
+            widget:
+              type: prowlarr
+              url: http://index.box
+              key: "{{HOMEPAGE_VAR_PROWLARR_API}}"

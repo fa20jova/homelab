@@ -1,0 +1,22 @@
+longhorn:
+  defaultSettings:
+    defaultReplicaCount: 1
+    defaultLonghornStaticStorageClass: longhorn
+    createDefaultDiskLabeledNodes: true
+    backupTarget: ""
+    backupTargetCredentialSecret: ""
+    defaultDataLocality: disabled
+    defaultReplicaAutoBalance: best-effort
+    defaultNodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+    defaultEngineImage: longhornio/longhorn-engine:v1.9.0
+    defaultDataEngine: v2
+    allowRecurringJobWhileVolumeDetached: true
+    nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod
+
+  ingress:
+    enabled: false
+
+  enablePSP: false
+
+  priorityClass:
+    create: false

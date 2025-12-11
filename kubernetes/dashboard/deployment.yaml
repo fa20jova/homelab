@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homepage
+  namespace: dash
+  labels:
+    app.kubernetes.io/name: homepage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homepage
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: homepage
+    spec:
+      serviceAccountName: homepage
+      automountServiceAccountToken: true
+      containers:
+        - name: homepage
+          image: ghcr.io/gethomepage/homepage:latest
+          env:
+            - name: HOMEPAGE_VAR_JELLYFIN_API
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: jellyfin_api}}
+            - name: HOMEPAGE_VAR_QB_USER
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: qb_user}}
+            - name: HOMEPAGE_VAR_QB_PASS
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: qb_pass}}
+            - name: HOMEPAGE_VAR_RADARR_API
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: radarr_api}}
+            - name: HOMEPAGE_VAR_SONARR_API
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: sonarr_api}}
+            - name: HOMEPAGE_VAR_PROWLARR_API
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: prowlarr_api}}
+            - name: HOMEPAGE_VAR_PIHOLE_API
+              valueFrom: {secretKeyRef: {name: homepage-secrets, key: pihole_api}}
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: home.box,home.box:80,home.box:443,172.20.50.57,172.20.50.57:80,172.20.50.57:443,172.20.50.57:8385
+          ports:
+            - containerPort: 3000
