@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qbittorrent
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      securityContext:
+        fsGroup: 1000
+      initContainers:
+        - name: qbit-init-conf
+          image: alpine:3.20
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              conf="/config/qBittorrent/qBittorrent.conf"
+              mkdir -p /config/qBittorrent
+              touch "$conf"
+              # ensure [Preferences] section
+              grep -q '^\[Preferences\]' "$conf" || printf '[Preferences]\n' >> "$conf"
+              # disable host header validation
+              if grep -q '^WebUI\\HostHeaderValidation=' "$conf"; then
+                sed -i 's/^WebUI\\HostHeaderValidation=.*/WebUI\\HostHeaderValidation=false/' "$conf"
+              else
+                printf 'WebUI\\HostHeaderValidation=false\n' >> "$conf"
+              fi
+              # allow these hostnames/IPs (qbit.box plus LB IP)
+              if grep -q '^WebUI\\ServerDomains=' "$conf"; then
+                sed -i 's/^WebUI\\ServerDomains=.*/WebUI\\ServerDomains=172.20.50.203,qbit.box,localhost/' "$conf"
+              else
+                printf 'WebUI\\ServerDomains=172.20.50.203,qbit.box,localhost\n' >> "$conf"
+              fi
+              chown -R 1000:1000 /config
+          volumeMounts:
+            - name: config
+              mountPath: /config
+      containers:
+        - name: qbittorrent
+          image: lscr.io/linuxserver/qbittorrent:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PUID
+              value: '1000'
+            - name: PGID
+              value: '1000'
+            - name: TZ
+              value: America/New_York
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /media
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: qbittorrent-config
+        - name: media
+          persistentVolumeClaim:
+            claimName: media-storage

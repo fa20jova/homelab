@@ -1,0 +1,8 @@
+# Optional Helm-style values file for future expansion
+# Not required by MetalLB directly, but included to show intent for future Helm usage.
+configInline:
+  address-pools:
+    - name: homelab-pool
+      protocol: layer2
+      addresses:
+        - 172.20.50.200-172.20.50.250
