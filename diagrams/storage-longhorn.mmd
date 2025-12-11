@@ -1,0 +1,21 @@
+flowchart TB
+
+subgraph Longhorn[Longhorn Storage System]
+    EngineV2[Longhorn Engine v2]
+    RWXVol[RWX Media Volume\n500Gi PVC]
+    HAConfig[Home Assistant PVC 5Gi]
+    OllamaModels[Ollama Models PVC 200Gi]
+end
+
+subgraph Node[nexus Node]
+    Disk[/NVMe Disk/]
+end
+
+Disk --> RWXVol
+Disk --> HAConfig
+Disk --> OllamaModels
+
+EngineV2 --> RWXVol
+EngineV2 --> HAConfig
+EngineV2 --> OllamaModels
+---

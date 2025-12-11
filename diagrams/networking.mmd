@@ -1,0 +1,29 @@
+flowchart LR
+
+subgraph LAN[Home Network 10.0.30.0/24]
+    PiHole[Pi-hole DNS]
+    HA(Box)[ha.box]
+    Jelly(Box)[jelly.box]
+    Qbit(Box)[qbit.box]
+    Radarr(Box)[radarr.box]
+    Sonarr(Box)[sonarr.box]
+    Prowlarr(Box)[index.box]
+end
+
+subgraph K8S[Kubernetes Cluster]
+    subgraph LB[MetalLB]
+        IP55[172.20.50.55/32]
+        IP57[172.20.50.57/32]
+        IP60[172.20.50.60/32]
+    end
+
+    HAService[Home Assistant LB]
+    HomeService[Homepage LB]
+    MediaService[Jellyfin LB + others]
+end
+
+PiHole --> LB
+LB --> HAService
+LB --> MediaService
+LB --> HomeService
+---
