@@ -1,29 +1,28 @@
 flowchart LR
 
-subgraph LAN[Home LAN]
+subgraph LAN["Home Network 10.0.30.0/24"]
     PiHole[Pi-hole DNS]
-    HABox[ha.box]
-    JellyBox[jelly.box]
-    QbitBox[qbit.box]
-    RadarrBox[radarr.box]
-    SonarrBox[sonarr.box]
-    IndexBox[index.box]
+    HA_Box[ha.box]
+    Jelly_Box[jelly.box]
+    Qbit_Box[qbit.box]
+    Radarr_Box[radarr.box]
+    Sonarr_Box[sonarr.box]
+    Prowlarr_Box[index.box]
 end
 
-subgraph K8S[Kubernetes Cluster]
-    subgraph MetalLB[MetalLB Pool]
-        IP55[172.20.50.55]
-        IP57[172.20.50.57]
-        IP60[172.20.50.60]
+subgraph K8S["Kubernetes Cluster"]
+    subgraph LB["MetalLB"]
+        IP55["172.20.50.55/32"]
+        IP57["172.20.50.57/32"]
+        IP60["172.20.50.60/32"]
     end
 
-    HomeSvc[Home Assistant LB]
-    DashSvc[Homepage LB]
-    MediaSvc[Media Services LB]
+    HAService[Home Assistant LB]
+    HomeService[Homepage LB]
+    MediaService["Jellyfin LB & others"]
 end
 
-PiHole --> MetalLB
-MetalLB --> HomeSvc
-MetalLB --> MediaSvc
-MetalLB --> DashSvc
----
+PiHole --> LB
+LB --> HAService
+LB --> MediaService
+LB --> HomeService
