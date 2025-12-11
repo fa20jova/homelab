@@ -1,19 +1,12 @@
 flowchart LR
-    User((User)) --> LB[MetalLB LoadBalancer]
-
+    User((User)) --> LB[MetalLB LoadBalancer VIPs]
     LB --> K3s[K3s Server (nexus)]
-    K3s --> MediaNodes[Jellyfin | qBit | Radarr | Sonarr | Prowlarr]
-
+    K3s --> MediaNodes["Media Workloads<br/>Jellyfin, qBit, Radarr, Sonarr, Prowlarr"]
     K3s --> HomeNS[Home Assistant Namespace]
     HomeNS --> HA[Home Assistant]
-
-    K3s --> DashNS[Dashboard Namespace]
-    DashNS --> Homepage[Homepage UI]
-
-    K3s --> AINS[AI Namespace]
-    AINS --> AIPVC[Ollama Models PVC]
-
-    MediaNodes --> Longhorn[Longhorn RWX Storage]
+    K3s --> DashboardNS[Dashboard Namespace]
+    DashboardNS --> Homepage[Homepage UI]
+    K3s --> AI["AI Namespace<br/>Ollama Models PVC"]
+    MediaNodes --> Longhorn[Longhorn RWX Volumes]
     HA --> Longhorn
-    AIPVC --> Longhorn
----
+    AI --> Longhorn
