@@ -1,9 +1,0 @@
-flowchart LR
-    Qbit[qBittorrent] --> Downloads[Downloads Folder (/media)]
-    Prowlarr[Prowlarr Indexer] --> Radarr
-    Prowlarr --> Sonarr
-    Radarr --> Qbit
-    Sonarr --> Qbit
-    Downloads --> Radarr
-    Downloads --> Sonarr
-    Downloads --> Jellyfin[Jellyfin Library Scan]

@@ -1,6 +1,0 @@
-flowchart LR
-    HA[Home Assistant Automations] --> API[HTTP Requests]
-    API --> Ollama[Ollama Server\\n172.20.50.61]
-    Ollama --> Model[Deepseek-r1 / Coder Models]
-    Model --> HAResponse[Formatted Response]
-    HAResponse --> Dashboard[Homepage Widgets]
