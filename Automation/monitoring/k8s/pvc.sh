@@ -1,11 +1,19 @@
 #!/bin/bash
-# PVC usage monitor
 
 THRESHOLD=80
+LOGFILE="/var/log/pvc-usage.log"
 
-echo "Checking PVCs over ${THRESHOLD}% usage..."
+echo "[PVC Monitor] $(date): Starting PVC scan..." | tee -a "$LOGFILE"
 
-kubectl get pvc --all-namespaces -o custom-columns='NAMESPACE:.metadata.namespace,NAME:.metadata.name,STORAGE:.status.capacity.storage,ACCESS:.spec.accessModes[*]' | tail -n +2 | while read ns pvc size access; do
-  usage=$(kubectl top pod --namespace "$ns" --no-headers 2>/dev/null | awk '{sum+=$3} END {print sum}')
-  echo "PVC: $pvc in $ns – Current pod memory usage: ${usage}Mi"
+NAMESPACES=$(kubectl get ns --no-headers -o custom-columns=":metadata.name")
+
+for ns in $NAMESPACES; do
+  PVCs=$(kubectl get pvc -n "$ns" --no-headers 2>/dev/null)
+  if [[ -z "$PVCs" ]]; then continue; fi
+
+  echo "[Namespace: $ns]" | tee -a "$LOGFILE"
+  echo "$PVCs" | awk '{print $1}' | while read pvc; do
+    usage=$(kubectl top pod -n "$ns" --no-headers 2>/dev/null | awk '{sum+=$3} END {print sum}')
+    echo "  PVC: $pvc, Approx pod usage: ${usage}Mi" | tee -a "$LOGFILE"
+  done
 done
