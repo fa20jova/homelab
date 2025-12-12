@@ -15,6 +15,5 @@ This repository collects the configurations, diagrams, and scripts that power my
 - diagrams/: Architecture and network diagrams
 - kubernetes/: Cluster configuration and service manifests
 - homeassistant/: Automations, dashboards, and blueprints
-- powershell/: Windows and API automation scripts
-- bash-scripts/: Linux automation for maintenance, backups, and monitoring
+- Automation /: Automation for maintenance, backups, and monitoring
 - networking/: Device configurations and network design references
