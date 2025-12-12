@@ -1,0 +1,12 @@
+flowchart LR
+    User((User)) --> LB[MetalLB LoadBalancer VIPs]
+    LB --> K3s["K3s Server (nexus)"]
+    K3s --> MediaNodes["Media Workloads: Jellyfin, qBit, Radarr, Sonarr, Prowlarr"]
+    K3s --> HomeNS["Home Assistant Namespace"]
+    HomeNS --> HA["Home Assistant"]
+    K3s --> DashboardNS["Dashboard Namespace"]
+    DashboardNS --> Homepage["Homepage UI"]
+    K3s --> AI["AI Namespace: Ollama Models PVC"]
+    MediaNodes --> Longhorn["Longhorn RWX Volumes"]
+    HA --> Longhorn
+    AI --> Longhorn

@@ -1,20 +1,20 @@
 flowchart TB
 
-subgraph Node[nexus Node]
-    Disk[NVMe Disk]
+subgraph Longhorn["Longhorn Storage System"]
+    EngineV2["Longhorn Engine v2"]
+    RWXVol["RWX Media Volume (500Gi PVC)"]
+    HAConfig["Home Assistant PVC (5Gi)"]
+    OllamaModels["Ollama Models PVC (200Gi)"]
 end
 
-subgraph Longhorn[Longhorn Storage]
-    RWXVol[Media RWX Volume 500Gi]
-    HAConfig[Home Assistant PVC 5Gi]
-    OllamaPVC[Ollama Models PVC 200Gi]
+subgraph Node["nexus Node"]
+    Disk["NVMe Disk"]
 end
 
 Disk --> RWXVol
 Disk --> HAConfig
-Disk --> OllamaPVC
+Disk --> OllamaModels
 
-RWXVol --> Longhorn
-HAConfig --> Longhorn
-OllamaPVC --> Longhorn
----
+EngineV2 --> RWXVol
+EngineV2 --> HAConfig
+EngineV2 --> OllamaModels
